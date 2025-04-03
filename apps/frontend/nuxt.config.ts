@@ -27,7 +27,7 @@ export default defineNuxtConfig({
     public: {
       WORKER_API: 'http://localhost:8787',
     },
-    DATABASE_URL: '',
+    DATABASE_URL: process.env.DATABASE_URL
   },
 
   devServer: {
