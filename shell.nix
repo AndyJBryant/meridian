@@ -8,6 +8,23 @@ let
   git = pkgs.git;
   # Add Wrangler
   wrangler = pkgs.wrangler;
+  
+  # Python environment
+  pythonEnv = pkgs.python39.withPackages (ps: with ps; [
+    jupyter
+    pandas
+    numpy
+    torch
+    transformers
+    umap-learn
+    hdbscan
+    matplotlib
+    seaborn
+    tqdm
+    python-dotenv
+    requests
+    pip  # for installing additional packages
+  ]);
 
 in
 pkgs.mkShell {
@@ -20,7 +37,7 @@ pkgs.mkShell {
     git
     # Add Wrangler
     wrangler
-    # Removed python - Add back if you know you need it for a separate script/notebook
+    pythonEnv
   ];
 
   shellHook = ''
@@ -31,6 +48,11 @@ pkgs.mkShell {
     echo "PostgreSQL available: $(psql --version || echo 'Not found or server not running')"
     echo "Git version: $(git --version)"
     echo "Wrangler version: $(wrangler --version)"
+    echo "Python version: $(python --version)"
+    echo "Jupyter version: $(jupyter --version)"
+    echo "-------------------------------------------------"
+    echo "Installing additional Python packages..."
+    pip install -U openai json-repair google-genai gliclass rapidfuzz retry ipywidgets widgetsnbextension pandas-profiling readtime optuna bertopic supabase
     echo "-------------------------------------------------"
     echo "Ensure configuration files are created and populated:"
     echo "  - packages/database/.env"
