@@ -1,8 +1,13 @@
 import { getDb } from '@meridian/database';
+import { useRuntimeConfig } from '#imports';
 
 export default defineEventHandler(async event => {
   const db = getDb(useRuntimeConfig(event).DATABASE_URL);
   const reports = await db.query.$reports.findMany();
+
+  const config = useRuntimeConfig();
+  console.log('DATABASE_URL from Nuxt Runtime Config:', config.DATABASE_URL); // Check server-side var
+  console.log('DATABASE_URL from process.env:', process.env.DATABASE_URL); // Check direct env var
 
   // Process reports to add date and slug
   const processedReports = reports

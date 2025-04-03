@@ -1,2 +1,2 @@
-DATABASE_URL=""
-SECRET_KEY=""
+DATABASE_URL="postgresql://meridian_user:kjvZDfeuLMDuNRMU7sGeioGhfKWt@localhost:5432/meridian_db"
+SECRET_KEY="AIzaSyAenIqzFWjZTjYHLczGRdr182L76475cSo"
