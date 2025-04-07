@@ -1,6 +1,6 @@
 # shell.nix (Final Version)
 let
-  pkgs = import <nixpkgs> {};
+  pkgs = import <nixpkgs> { config = { allowUnfree = true; }; };
 
   nodejs = pkgs.nodejs_22;
   pnpm = pkgs.nodePackages.pnpm;
@@ -9,12 +9,39 @@ let
   # Add Wrangler
   wrangler = pkgs.wrangler;
   
-  # Python environment
-  pythonEnv = pkgs.python39.withPackages (ps: with ps; [
+  # Updated Python setup with more test skipping
+  python = (pkgs.python310.override {
+    packageOverrides = self: super: {
+      # Skip tests for problematic packages
+      aiohttp = super.aiohttp.overridePythonAttrs (old: {
+        doCheck = false;
+      });
+      furl = super.furl.overridePythonAttrs (old: {
+        doCheck = false;
+      });
+      pook = super.pook.overridePythonAttrs (old: {
+        doCheck = false;
+      });
+      sqlalchemy-utils = super.sqlalchemy-utils.overridePythonAttrs (old: {
+        doCheck = false;
+      });
+      factory-boy = super.factory-boy.overridePythonAttrs (old: {
+        doCheck = false;
+      });
+      mocket = super.mocket.overridePythonAttrs (old: {
+        doCheck = false;
+      });
+      terminado = super.terminado.overridePythonAttrs (old: {
+        doCheck = false;
+      });
+    };
+  });
+  
+  pythonEnv = python.withPackages (ps: with ps; [
     jupyter
     pandas
     numpy
-    torch
+    torch-bin  # Use pre-built binary instead of building from source
     transformers
     umap-learn
     hdbscan
